@@ -162,10 +162,9 @@
 					let positionCode=this.$route.params.job;
 					let token=this.$route.params.token
 					
-					
 					if(this.correctLoginBtn){
 						this.correctLoginBtn=false;
-						this.axios.post(process.env.domain+'/user/saveInitUserInfo?userEmail='+email+'&userName='+name+'&oldPassword='+oldPassword+'&newPassword='+newPassword).then(res => {
+						this.axios.post(process.env.domain+'/user/saveInitUserInfo',{userEmail:email,userName:name,oldPassword:oldPassword,newPassword:newPassword}).then(res => {
 							console.log(res);
 							this.correctLoginBtn=true;
 							if(res.data.code==1000){

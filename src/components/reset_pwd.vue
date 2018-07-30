@@ -153,7 +153,7 @@
 				}else if(!this.newPwd){
 					this.pwdMsg='密码不能为空';
 				}else if(!reg.test(this.newPwd)){
-					this.pwdMsg='密码格式为：大小写字母、数字、特殊符号必须四选三，长度为8-18';
+					this.pwdMsg='密码格式为：大小写字母、数字、特殊符号至少选三种，长度为8-18';
 				}else if(!this.correctPwd){
 					this.correctMsg='两次密码不一致';
 				}else{

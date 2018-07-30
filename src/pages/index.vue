@@ -1,7 +1,7 @@
 <template>
 	<div class="home_content">
 		<div class="module_box">
-			<a href="javascript:void(0)" v-for="systemMsg in listMsg" @click="enter(systemMsg.url)"><img class="moduleImg" :src="'static/img/'+systemMsg.id+'@2x.png'"/></a>
+			<a href="javascript:void(0)" v-for="systemMsg in listMsg" @click="enter(systemMsg.id , systemMsg.url)"><img class="moduleImg" :src="'static/img/'+systemMsg.id+'@2x.png'"/></a>
 		</div>
 	</div>
 </template>
@@ -51,9 +51,9 @@
 					console.log(res.data)
 				});
 			},
-			enter(url){
+			enter(id , url){
 //				alert(url)
-				if(url=="http://stat.beibeiyue.cn/workorder/#/login"){
+				if(id==1){
 					this.axios.post(process.env.domain +'/user/workOrder?token='+this.$route.params.token).then(res => {
 						if(res.data.code==1000){
 							window.location.href=url+"?userInfo="+encodeURI(JSON.stringify(res.data.result));
@@ -68,7 +68,7 @@
 						}
 						
 					});
-				}else if(url=="http://kdd.beibeiyue.com/"){
+				}else if(id==5){
 					this.axios.post(process.env.domain + '/user/checkToken',{token:this.$route.params.token}).then(res => {
 						if(res.data.code == 1004){
 							this.$toast('登录超时，请重新登录',1000)
