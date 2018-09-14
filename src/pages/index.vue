@@ -14,23 +14,6 @@
 			}
 		},
 		mounted(){
-//			if(getCookie("tokenVal")){
-//				//调接口
-//				//判断token是否有效，有效则可进入系统页面，无效返回登录页
-//				this.axios.post(process.env.domain + '/user/checkToken',{token:this.$route.params.token}).then(res => {
-//					console.log(res);
-//					if(res.data.code == 1004){
-//						this.$toast('登录超时，请重新登录',1000)
-//						setTimeout(() =>{
-//							window.location.href="http://ucenter.beibeiyue.com";
-//						},2000)
-//					}else if(res.data.code == 1000){
-//						setCookie("tokenVal",res.data.result,0.5);
-//					}
-//				});
-//			}else{
-//				window.location.href="http://ucenter.beibeiyue.com";
-//			}
 			
 			if(this.$route.params.sign=="noUserName"){
 				this.$toast('没有此系统的登录权限',1000)
@@ -46,7 +29,7 @@
 		},
 		methods:{
 			list(){
-				this.axios.post(process.env.domain+'/user/index?token='+this.$route.params.token).then(res => {
+				this.axios.post(process.env.domain+'/user/index').then(res => {
 					this.listMsg=res.data.result.list;
 					console.log(res.data)
 				});
@@ -54,9 +37,9 @@
 			enter(id , url){
 //				alert(url)
 				if(id==1){
-					this.axios.post(process.env.domain +'/user/workOrder?token='+this.$route.params.token).then(res => {
+					this.axios.post(process.env.domain +'/user/workOrder').then(res => {
 						if(res.data.code==1000){
-							window.location.href=url+"?userInfo="+encodeURI(JSON.stringify(res.data.result));
+							window.open(url+"?userInfo="+encodeURI(JSON.stringify(res.data.result)));
 						}else if(res.data.code==1004){
 							window.location.href="http://ucenter.beibeiyue.com";
 						}else if(res.data.code==1041){
@@ -68,23 +51,25 @@
 						}
 						
 					});
-				}else if(id==5){
-					this.axios.post(process.env.domain + '/user/checkToken',{token:this.$route.params.token}).then(res => {
-						if(res.data.code == 1004){
-							this.$toast('登录超时，请重新登录',1000)
-							setTimeout(() =>{
-								window.location.href="http://ucenter.beibeiyue.com";
-							},2000)
-						}else if(res.data.code == 1000){
-							let msg=eval('(' + res.data.result + ')')
-							msg.token =this.$route.params.token;
-							msg=JSON.stringify(msg)
-							console.log(msg)
-							window.location.href=url+"#/login?userInfo="+msg;
-						}
-					});
 				}else{
-					window.location.href=url+"?token="+this.$route.params.token;
+					this.axios.post(process.env.domain +'/user/checkLoginAuth',{id:id}).then(res => {
+						console.log(res.data);
+						if(res.data.code==1000){
+							window.open(res.data.result)
+						}else if(res.data.code==1004 || res.data.code==1024){
+							this.$toast('登录超时，请重新登录',1000)
+							window.location.href="http://ucenter.beibeiyue.com";
+						}else if(res.data.code==1008){
+							this.$toast('没有此系统的登录权限',1000)
+						}else if(res.data.code==1002){
+							this.$toast('当前用户已被锁定，请联系管理员',1000)
+						}else if(res.data.code==1013){
+							this.$toast('系统错误-联系管理员',1000)
+						}else if(res.data.code==1042){
+							this.$toast('系统错误-联系管理员',1000)
+						}
+						
+					});
 				}
 			}
 		}

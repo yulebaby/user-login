@@ -11,6 +11,7 @@ export default (Vue) => {
         /* ------------ 序列化参数 ------------- */
         if (res.method === 'post') res.data = Qs.stringify(res.data);
         res.timeout = 10000;
+        res.withCredentials=true;
         return res;
     });
 

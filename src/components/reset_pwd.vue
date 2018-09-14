@@ -121,16 +121,22 @@
 								       }, 1000)
 								    }
 								}else if(res.data.code==1005){
+									this.show=true
 									this.emailMsg=res.data.info;
 								}else if(res.data.code==1007){
+									this.show=true
 									this.$router.push('/home/qr_Login/0');
 								}else if(res.data.code==1019){
+									this.show=true
 									this.emailMsg='请填写正确的邮箱';
 								}else if(res.data.code==1041){
+									this.show=true
 									this.emailMsg='邮箱不存在';
 								}else if(res.data.code==1042){
+									this.show=true
 									this.$toast('系统错误-联系管理员',1000)
 								}else if(res.data.code==1002){
+									this.show=true
 									this.$toast('当前用户已被锁定，无法登录',1000)
 								}
 							});

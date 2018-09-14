@@ -71,7 +71,7 @@ export default new Router({
 		      		component: ResetPwd
 		    	},
 		    	{
-		      		path: '/home/personal_msg/:token/:email/:phone/:dateText/:group/:bumen/:job',
+		      		path: '/home/personal_msg',
 		      		meta: {keepAlive: false},
 		      		name: 'PersonalMsg',
 		      		component: PersonalMsg
@@ -79,12 +79,12 @@ export default new Router({
       		]	
     	},
     	{
-    		path: '/index/:token/:sign',		//sign值   0为默认值， 2001 该用户没有此系统权限     2002  本系统内该账号已停用     2003 token认证失败  
+    		path: '/index/:sign',		//sign值   0为默认值， 2001 该用户没有此系统权限     2002  本系统内该账号已停用     2003 token认证失败  
       		name: 'Index',
       		component: Index
     	},
     	{
-    		path: '/empty',
+    		path: '/empty/:per_msg',
       		name: 'Empty',
       		component: Empty
     	},

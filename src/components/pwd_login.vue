@@ -13,7 +13,7 @@
 				</router-link>
 			</div>
 			<form action="" class="pwdLogin_form clearfix">
-				<div class="pwdLogin" v-if='!info'>企业邮箱登录</div>
+				<div class="pwdLogin" v-if='!info' >企业邮箱登录</div>
 				<div class="error_prompt" v-if='info'>
 					<img class="error_icon" src="../assets/login/error@2x.png" alt="" />
 					<!--<span class="error_text">{{info}}，是否<span class="forgetPwd_text">忘记密码</span></span>-->
@@ -75,14 +75,11 @@
 					let msg=res.data.result;
 					console.log(msg);
 					if(res.data.code==1007){
-						this.$router.push('/home/personal_msg/'+msg.token+'/'+msg.userEmail+'/'+msg.phone+'/'+msg.entryTime+'/'+msg.groupingCode+'/'+msg.departmentCode+'/'+msg.position);
+						this.$router.push('/home/personal_msg');
 					}else if(res.data.code==1000){
-						this.$router.push('/index/'+msg + "/0");
-					}else if(res.data.code==1037){
-//						this.$toast('您不属于鱼乐贝贝的员工',1000)
-//						setTimeout(() =>{
-//							this.$router.push('/');
-//						},2000)
+						this.$router.push('/index/0');
+					}else{
+						window.location.href="http://ucenter.beibeiyue.com"
 					}
 				});
 			}
@@ -146,7 +143,7 @@
 						console.log(res);
 						this.code=res.data.code;
 						if(this.code == 1000){
-							this.$router.push('/index/'+res.data.result + "/0");
+							this.$router.push('/index/0');
 						}else if(this.code == 1001){
 							this.pwdError=res.data.code;
 						}else if(this.code == 1002){
@@ -165,7 +162,7 @@
 						}
 					});
 	        	}
-	        }
+	       }
 		}
 	}
 </script>

@@ -17,7 +17,7 @@
 		</div>
 		<div class="pair">
 			<label class="label" for="">邮箱</label>
-			<input class="email input" type="text" placeholder="邮箱" v-model='$route.params.email' readonly/>
+			<input class="email input" type="text" placeholder="邮箱" v-model='userMsg.userEmail=="null" ? "" : userMsg.userEmail' readonly/>
 			<!--<span class="common">@beibeiyue.com</span>-->
 		</div>
 		<div class="pair">
@@ -28,24 +28,24 @@
 		</div>
 		<div class="pair">
 			<label class="label" for="">联系电话</label>
-			<input class="phone input" type="text" placeholder="请填写手机电话" v-model='$route.params.phone' readonly/>
+			<input class="phone input" type="text" placeholder="" v-model='userMsg.phone=="null" ? "" : userMsg.phone' readonly/>
 		</div>
 		<div class="subMsg_title">员工信息</div>
 		<div class="pair">
 			<label class="label" for="">入职日期</label>
-			<input class="date input" type="text" placeholder="请选择日期" v-model='$route.params.dateText' readonly/>
+			<input class="date input" type="text" placeholder="" v-model='userMsg.entryTime=="null" ? "" : userMsg.entryTime' readonly/>
 		</div>
 		<div class="pair">
 			<label class="label" for="">分组</label>
-			<input class="group input" type="text" placeholder="" v-model='$route.params.group=="null" ? "" : $route.params.group' readonly/>
+			<input class="group input" type="text" placeholder="" v-model='userMsg.groupingCode=="null" ? "" : userMsg.groupingCode' readonly/>
 		</div>
 		<div class="pair">
 			<label class="label" for="">部门</label>
-			<input class="bumen input" type="text" placeholder="请选择所属部门" v-model='$route.params.bumen' readonly/>
+			<input class="bumen input" type="text" placeholder="" v-model='userMsg.departmentCode=="null" ? "" : userMsg.departmentCode' readonly/>
 		</div>
 		<div class="pair">
 			<label class="label" for="">职位</label>
-			<input class="job input" type="text" placeholder="选择您的职位" v-model='$route.params.job' readonly/>
+			<input class="job input" type="text" placeholder="" v-model='userMsg.position=="null" ? "" : userMsg.position' readonly/>
 		</div>
 		<div class="btn_box">
 			<input class="comfirm_login" type="button" value="确认登录" @click='correctLogin'/>
@@ -69,21 +69,18 @@
 				nameCor:'',
 				pwdCor:'',
 				correctPwdCor:'',
-				correctLoginBtn:true
+				correctLoginBtn:true,
+				userMsg:""
 			}
 		},
 		mounted(){
 			//判断是否首次登录
-			this.axios.post(process.env.domain + '/user/saveInitUserInfoCheck',{userEmail:this.$route.params.email}).then(res => {
-				console.log(res);
-				if(res.data.code == 1041){
-					window.location.href="http://ucenter.beibeiyue.com";
-				}else if(this.code == 1002){
-					window.location.href="http://ucenter.beibeiyue.com";
-				}else if(this.code == 1007){
-					
-				}else if(this.code == 1004){
-					window.location.href="http://ucenter.beibeiyue.com";
+			this.axios.post(process.env.domain+'/user/checkFirstLogin').then(res => {
+				console.log(res.data);
+				if(res.data.code==1000){
+					this.userMsg=res.data.result;
+				}else{
+					window.location.href="http://ucenter.beibeiyue.com"
 				}
 			});
 		},
@@ -146,21 +143,11 @@
 				}else if(this.correctPwd!=this.pwd){
 					this.correctPwdMsg='两次密码不一致';
 				}else{
-					let email=this.$route.params.email;
+					let email=this.userMsg.userEmail;
 					let name=this.name;
 					let oldPassword=this.pwd;
 					let newPassword=this.correctPwd;
-					let phone=this.$route.params.phone;
-					let entryTime=this.$route.params.dateText;
-					let departmentCode=this.$route.params.bumen;
-					if(this.$route.params.group){
-						let groupingCode=this.$route.params.group;
-					}else{
-						let groupingCode="";
-					}
 					
-					let positionCode=this.$route.params.job;
-					let token=this.$route.params.token
 					
 					if(this.correctLoginBtn){
 						this.correctLoginBtn=false;
@@ -168,11 +155,17 @@
 							console.log(res);
 							this.correctLoginBtn=true;
 							if(res.data.code==1000){
-								setCookie("tokenVal",res.data.result,0.5);
 								this.$toast('信息已完善',1000)
 								setTimeout(() =>{
-									this.$router.push('/index/'+res.data.result + "/0");
+									this.$router.push('/index/0');
 								},2000)
+							}else if(res.data.code==1043){
+								this.$toast('用户不是首次登录',1000)
+								setTimeout(() =>{
+									window.location.href="http://ucenter.beibeiyue.com"
+								},2000)
+							}else{
+								this.$toast(res.data.info,1000)
 							}
 						});
 					}
